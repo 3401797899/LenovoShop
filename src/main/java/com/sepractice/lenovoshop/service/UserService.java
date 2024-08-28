@@ -19,7 +19,7 @@ public class UserService {
 
     public void register(String username, String password) {
         User u = new User();
-        u.setUsername(username);
+        u.setEmail(username);
         u.setPassword(password);
         userMapper.insert(u);
     }
