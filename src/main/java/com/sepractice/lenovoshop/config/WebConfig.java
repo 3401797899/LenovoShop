@@ -14,13 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
     private LoginInterceptor loginInterceptor;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register");
-    }
-
-    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 所有接口
                 .allowCredentials(true) // 是否发送 Cookie
@@ -29,4 +22,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .exposedHeaders("*");
     }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(loginInterceptor)
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/mail*");
+    }
+
+
 }

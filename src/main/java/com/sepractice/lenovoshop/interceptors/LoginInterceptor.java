@@ -12,11 +12,24 @@ import java.util.Map;
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
 
+    private void Set401Response(HttpServletResponse response){
+        response.setStatus(401);
+        response.setContentType("application/json;charset=utf-8");
+        try {
+            response.getWriter().write("{\"code\":1,\"message\":\"用户认证失败\"}");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handle) throws Exception{
+        if(request.getMethod().equals("OPTIONS")){
+            return true;
+        }
         String token = request.getHeader("Authorization");
         if(token == null){
-            response.setStatus(401);
+            Set401Response(response);
             return false;
         }
         try{
@@ -24,7 +37,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             ThreadLocalUtil.set(userId);
             return true;
         }catch (Exception e){
-            response.setStatus(401);
+            Set401Response(response);
             return false;
         }
     }
