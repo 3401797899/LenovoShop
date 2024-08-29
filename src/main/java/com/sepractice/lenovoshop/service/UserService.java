@@ -53,12 +53,6 @@ public class UserService {
         if (request.getNickname() != null) {
             existingUser.setNickname(request.getNickname());
         }
-        if (request.getEmail() != null) {
-            existingUser.setEmail(request.getEmail());
-        }
-        if (request.getAvatar() != null) {
-            existingUser.setAvatar(request.getAvatar());
-        }
         if (request.getGender() != null) {
             existingUser.setGender(request.getGender());
         }
