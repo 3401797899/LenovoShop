@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import com.sepractice.lenovoshop.utils.RandomString;
+import com.sepractice.lenovoshop.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,5 +41,28 @@ public class UserService {
         u.setBalance((int) 1e9);
         u.setCreatedTime(LocalDateTime.now());
         userMapper.insert(u);
+    }
+
+    @Transactional
+    public void updateUser(User request) {
+        String userId = ThreadLocalUtil.get();
+
+        User existingUser = userMapper.selectById(Integer.valueOf(userId));
+
+        // 只更新非空字段
+        if (request.getNickname() != null) {
+            existingUser.setNickname(request.getNickname());
+        }
+        if (request.getEmail() != null) {
+            existingUser.setEmail(request.getEmail());
+        }
+        if (request.getAvatar() != null) {
+            existingUser.setAvatar(request.getAvatar());
+        }
+        if (request.getGender() != null) {
+            existingUser.setGender(request.getGender());
+        }
+
+        userMapper.updateById(existingUser);
     }
 }

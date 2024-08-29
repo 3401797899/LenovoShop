@@ -7,10 +7,8 @@ import com.sepractice.lenovoshop.utils.JwtUtil;
 import com.sepractice.lenovoshop.utils.Result;
 import com.sepractice.lenovoshop.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -52,5 +50,15 @@ public class UserController {
         String userId = ThreadLocalUtil.get();
         User user = userMapper.selectById(userId);
         return Result.success(user);
+    }
+
+    @PostMapping(value = "/update")
+    public Result update(@RequestBody @Validated User user) {
+        String userId = ThreadLocalUtil.get();
+        if (!userId.equals(user.getId().toString())) {
+            return Result.error("无权限");
+        }
+        userService.updateUser(user);
+        return Result.success();
     }
 }
