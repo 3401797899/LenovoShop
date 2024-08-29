@@ -59,4 +59,12 @@ public class UserService {
 
         userMapper.updateById(existingUser);
     }
+
+
+    public boolean updateAvatar(String userId, String avatar){
+        User user = new User();
+        user.setId(Integer.valueOf(userId));
+        user.setAvatar(avatar);
+        return userMapper.updateById(user) > 0;
+    }
 }

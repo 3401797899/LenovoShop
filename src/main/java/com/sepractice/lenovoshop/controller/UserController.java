@@ -1,5 +1,6 @@
 package com.sepractice.lenovoshop.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import com.sepractice.lenovoshop.service.UserService;
@@ -7,15 +8,22 @@ import com.sepractice.lenovoshop.utils.JwtUtil;
 import com.sepractice.lenovoshop.utils.Result;
 import com.sepractice.lenovoshop.utils.ThreadLocalUtil;
 import com.sepractice.lenovoshop.utils.Validate;
+import jakarta.validation.Path;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 
 
 @RestController
@@ -28,8 +36,14 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    private static String ROOT_PATH = System.getProperty("user.dir");
+
     @PostMapping(value = "/login")
-    public Result login(String email, String password) {
+    public Result login(@RequestBody Map<String, String> params) {
+        // JSON传输数据的获取方式
+        String email = params.get("email");
+        String password = params.get("password");
+
         if (!userService.isUserExistsByEmail(email)) {
             return Result.error("用户不存在");
         }
@@ -44,7 +58,10 @@ public class UserController {
     @PostMapping(value = "/register")
 //    public Result register(@Email(message = "邮箱输入不正确") String email, @Size(min= 6,max = 20, message = "密码长度应该在6-20之间") String password) {
 //    使用校验会让interceptor中的exclude失效，太逆天了
-    public Result register(String email, String password) {
+    public Result register(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        String password = params.get("password");
+
         if (userService.isUserExistsByEmail(email)) {
             return Result.error("用户已存在");
         }
@@ -100,6 +117,25 @@ public class UserController {
         }
         user.setPassword(newpwd);
         userMapper.updateById(user);
+        return Result.success();
+    }
+
+    @PostMapping(value = "/avatar")
+    public Result update_avatar(@RequestParam("avatar") MultipartFile avatar) {
+        String filename = avatar.getOriginalFilename();
+        String suffixName = filename.substring(filename.lastIndexOf("."));
+        filename = UUID.randomUUID() + suffixName;
+        File dest = new File(ROOT_PATH, "media/" + filename);
+        if(!dest.getParentFile().exists()){
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            avatar.transferTo(dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.error("上传失败");
+        }
+        userService.updateAvatar(ThreadLocalUtil.get(), "/media/" + filename);
         return Result.success();
     }
 }
