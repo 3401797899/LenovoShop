@@ -3,11 +3,16 @@ package com.sepractice.lenovoshop.controller;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import com.sepractice.lenovoshop.service.UserService;
+import com.sepractice.lenovoshop.utils.JwtUtil;
 import com.sepractice.lenovoshop.utils.Result;
+import com.sepractice.lenovoshop.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 
 @RestController
@@ -17,12 +22,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/register")
-    public Result register(String username, String password){
-        if(userService.findUserByUsername(username)){
+    @Autowired
+    private UserMapper userMapper;
+
+    @PostMapping(value = "/login")
+    public Result login(String email, String password) {
+        if (!userService.isUserExistsByEmail(email)) {
             return Result.error("用户已存在");
         }
-        userService.register(username, password);
+        User user = userService.findUserByEmail(email);
+        if (!user.getPassword().equals(password)) {
+            return Result.error("密码错误");
+        }
+        String token = JwtUtil.getToken(user.getId().toString());
+        return Result.success(token);
+    }
+
+    @PostMapping(value = "/register")
+    public Result register(String email, String password) {
+        if (userService.isUserExistsByEmail(email)) {
+            return Result.error("用户已存在");
+        }
+        userService.register(email, password);
         return Result.success();
+    }
+
+    @GetMapping(value = "/info")
+    public Result info() {
+        String userId = ThreadLocalUtil.get();
+        User user = userMapper.selectById(userId);
+        return Result.success(user);
     }
 }

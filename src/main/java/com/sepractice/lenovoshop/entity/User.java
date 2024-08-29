@@ -3,8 +3,10 @@ package com.sepractice.lenovoshop.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -21,11 +23,12 @@ public class User {
 
     private Integer gender;
 
+    @JsonIgnore
     private String password;
 
     private Integer balance;
 
-    private Date createdTime;
+    private LocalDateTime createdTime;
 
     // 枚举类型用于性别
     public enum Gender {
