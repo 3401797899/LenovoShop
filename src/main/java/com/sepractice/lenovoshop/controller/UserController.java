@@ -81,6 +81,10 @@ public class UserController {
         }
         String code = RandomString.generateCode(6);
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        String redis_code = operations.get("login:mail:" + email);
+        if (redis_code != null ) {
+            return Result.error("请勿频繁发送验证码");
+        }
         operations.set("login:mail:" + email, code, 5, java.util.concurrent.TimeUnit.MINUTES);
         emailService.sendEmail(email, "LenovoShop登录验证码", "【LenovoShop】验证码为：" + code + "，5分钟内有效，为了保证您的账户安全，请勿泄露给他人。");
         return Result.success();
@@ -126,6 +130,10 @@ public class UserController {
         }
         String code = RandomString.generateCode(6);
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        String redis_code = operations.get("register:mail:" + email);
+        if (redis_code != null ) {
+            return Result.error("请勿频繁发送验证码");
+        }
         operations.set("register:mail:" + email, code, 5, java.util.concurrent.TimeUnit.MINUTES);
         emailService.sendEmail(email, "LenovoShop注册验证码", "【LenovoShop】验证码为：" + code + "，5分钟内有效，为了保证您的账户安全，请勿泄露给他人。");
         return Result.success();
