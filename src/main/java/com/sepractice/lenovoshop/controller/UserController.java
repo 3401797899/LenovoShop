@@ -1,19 +1,12 @@
 package com.sepractice.lenovoshop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import com.sepractice.lenovoshop.service.UserService;
-import com.sepractice.lenovoshop.utils.JwtUtil;
-import com.sepractice.lenovoshop.utils.Result;
-import com.sepractice.lenovoshop.utils.ThreadLocalUtil;
-import com.sepractice.lenovoshop.utils.Validate;
-import jakarta.validation.Path;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import org.apache.ibatis.annotations.Update;
+import com.sepractice.lenovoshop.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,6 +28,12 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     private static String ROOT_PATH = System.getProperty("user.dir");
 
     @PostMapping(value = "/login")
@@ -43,7 +41,6 @@ public class UserController {
         // JSON传输数据的获取方式
         String email = params.get("email");
         String password = params.get("password");
-
         if (!userService.isUserExistsByEmail(email)) {
             return Result.error("用户不存在");
         }
@@ -55,12 +52,47 @@ public class UserController {
         return Result.success(token);
     }
 
+    @PostMapping(value = "/login/mail")
+    public Result loginByMail(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        String code = params.get("code");
+
+        if (!userService.isUserExistsByEmail(email)) {
+            return Result.error("用户不存在");
+        }
+        User user = userService.findUserByEmail(email);
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        String redis_code = operations.get("login:mail:" + email);
+        if (redis_code == null ) {
+            return Result.error("请先获取验证码");
+        }
+        if(!redis_code.equals(code)){
+            return Result.error("验证码错误");
+        }
+        String token = JwtUtil.getToken(user.getId().toString());
+        return Result.success(token);
+    }
+
+    @PostMapping(value = "/login/mail/code")
+    public Result loginSendMail(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        if(!Validate.validate_email(email).equals("ok")) {
+            return Result.error(Validate.validate_email(email));
+        }
+        String code = RandomString.generateCode(6);
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        operations.set("login:mail:" + email, code, 5, java.util.concurrent.TimeUnit.MINUTES);
+        emailService.sendEmail(email, "LenovoShop登录验证码", "【LenovoShop】验证码为：" + code + "，5分钟内有效，为了保证您的账户安全，请勿泄露给他人。");
+        return Result.success();
+    }
+
     @PostMapping(value = "/register")
 //    public Result register(@Email(message = "邮箱输入不正确") String email, @Size(min= 6,max = 20, message = "密码长度应该在6-20之间") String password) {
 //    使用校验会让interceptor中的exclude失效，太逆天了
     public Result register(@RequestBody Map<String, String> params) {
         String email = params.get("email");
         String password = params.get("password");
+        String code = params.get("code");
 
         if (userService.isUserExistsByEmail(email)) {
             return Result.error("用户已存在");
@@ -71,9 +103,34 @@ public class UserController {
         if(!Validate.validate_email(email).equals("ok")){
             return Result.error(Validate.validate_email(email));
         }
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        String redis_code = operations.get("register:mail:" + email);
+        if (redis_code == null ) {
+            return Result.error("请先获取验证码");
+        }
+        if(!redis_code.equals(code)){
+            return Result.error("验证码错误");
+        }
         userService.register(email, password);
         return Result.success();
     }
+
+    @PostMapping(value = "/register/mail/code")
+    public Result registerSendMail(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        if (userService.isUserExistsByEmail(email)) {
+            return Result.error("该邮箱已注册");
+        }
+        if(!Validate.validate_email(email).equals("ok")) {
+            return Result.error(Validate.validate_email(email));
+        }
+        String code = RandomString.generateCode(6);
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        operations.set("register:mail:" + email, code, 5, java.util.concurrent.TimeUnit.MINUTES);
+        emailService.sendEmail(email, "LenovoShop注册验证码", "【LenovoShop】验证码为：" + code + "，5分钟内有效，为了保证您的账户安全，请勿泄露给他人。");
+        return Result.success();
+    }
+
 
     @GetMapping(value = "/info")
     public Result info() {
@@ -92,7 +149,7 @@ public class UserController {
                     .orElse("未知错误");
 
             return Result.error(errorMessage);
-        }
+        };
 
         String userId = ThreadLocalUtil.get();
         if (!userId.equals(user.getId().toString())) {
@@ -138,4 +195,7 @@ public class UserController {
         userService.updateAvatar(ThreadLocalUtil.get(), "/media/" + filename);
         return Result.success();
     }
+
+
+
 }
