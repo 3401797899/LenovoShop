@@ -11,7 +11,13 @@ public class ProductConfig {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    private Integer productId;
+
     private String name;
 
+    private String brief;
+
     private String value;
+
+    private Integer price;
 }
