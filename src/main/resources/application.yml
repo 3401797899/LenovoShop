@@ -5,6 +5,26 @@ spring:
     username: root
     password: Mo01iHt++
 
+  mail:
+    host: smtp.qq.com
+    username: 
+    password:
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+  data:
+    redis:
+      host: 192.168.1.190
+      port: 6379
+
 mybatis-plus:
   configuration:
     cache-enabled: true
