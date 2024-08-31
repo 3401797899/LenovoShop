@@ -16,6 +16,7 @@ public class Product {
 
     private String productId;
 
+
     private String name;
 
     private String brief;
