@@ -22,21 +22,23 @@ public class OrderDTO {
 
     private Integer status;
 
-    private String expressName;
+    //private String expressName;
 
-    private String expressNumber;
+    //private String expressNumber;
 
     private Date createdTime;
 
-    private Date paymentTime;
+    //private Date paymentTime;
 
-    private Date consignTime;
+    //private Date consignTime;
 
-    private Date endTime;
+    //private Date endTime;
 
     private String name;
 
     private String phone;
+
+    private String dz;
 
 }
 

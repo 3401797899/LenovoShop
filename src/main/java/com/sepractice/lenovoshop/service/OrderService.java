@@ -27,7 +27,15 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .map(order -> {
                     OrderDTO dto = new OrderDTO();
                     dto.setId(order.getId());
+                    dto.setOrderId(order.getOrderId());
                     dto.setUserId(order.getUserId());
+                    dto.setPayment(order.getPayment());
+                    dto.setStatus(order.getStatus());
+                    dto.setCreatedTime(order.getCreatedTime());
+                    dto.setName(order.getName());
+                    dto.setPhone(order.getPhone());
+                    dto.setDz(order.getDz());
+
                     //TODO：根据rainning的需求加
 
 
