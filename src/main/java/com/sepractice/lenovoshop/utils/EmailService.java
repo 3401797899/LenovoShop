@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class SendEmailUtil {
+public class EmailService {
     @Autowired
     private static JavaMailSender javaMailSender;
 
