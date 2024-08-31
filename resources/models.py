@@ -52,8 +52,11 @@ class Category(models.Model):
         db_table = "categories"
 
 class Config(models.Model):
+    product = models.ForeignKey(to=Product, on_delete=models.PROTECT, verbose_name="产品")
     name = models.CharField(max_length=255, verbose_name="配置名称")
-    value = models.CharField(max_length=255, verbose_name="配置值")
+    brief = models.CharField(max_length=255, verbose_name="配置简介")
+    price = models.IntegerField(verbose_name="价格")
+    value = models.CharField(max_length=1024, verbose_name="配置值")
 
     class Meta:
         db_table = "configs"
@@ -61,10 +64,10 @@ class Config(models.Model):
 class Product(models.Model):
     product_id = models.CharField(max_length=100, verbose_name="产品ID")
     name = models.CharField(max_length=255, verbose_name="产品名称")
+    brief = models.CharField(max_length=255, verbose_name="产品简介")
     pic_url = models.CharField(verbose_name="产品图片", max_length=255,default='/media/logo.png')
-    price = models.IntegerField(verbose_name="价格")
     category = models.ForeignKey(to=Category, on_delete=models.DO_NOTHING, verbose_name="产品分类")
-    configs = models.ManyToManyField(to=Config, verbose_name="产品配置 + 选项")
+
 
     class Meta:
         db_table = "products"
