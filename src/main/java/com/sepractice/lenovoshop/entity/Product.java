@@ -16,11 +16,11 @@ public class Product {
 
     private String productId;
 
+    private String brief;
+
     private String name;
 
     private String picUrl;
-
-    private Integer price;
 
     private Integer categoryId;
 
