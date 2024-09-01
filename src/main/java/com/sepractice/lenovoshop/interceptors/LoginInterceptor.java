@@ -29,9 +29,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         String token = request.getHeader("Authorization");
         if(token == null){
-//            Set401Response(response);
-//            return false;
-            return true;
+            Set401Response(response);
+            return false;
         }
         try{
             String userId = JwtUtil.parseToken(token);
