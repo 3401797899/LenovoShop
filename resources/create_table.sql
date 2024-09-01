@@ -1,7 +1,8 @@
 -- Create model Category
 CREATE TABLE `categories` (
                               `id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                              `name` varchar(255) NOT NULL
+                              `name` varchar(255) NOT NULL,
+                              `img_url` varchar(255) NOT NULL DEFAULT '/media/logo.png'
 );
 
 -- Create model Config
