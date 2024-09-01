@@ -22,7 +22,7 @@ public class Order {
 
     private Integer payment;
 
-    private Status status;
+    private Integer status;
 
     private String expressName;
 
@@ -66,3 +66,4 @@ public class Order {
         }
     }
 }
+

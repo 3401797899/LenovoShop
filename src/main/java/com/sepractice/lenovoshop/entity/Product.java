@@ -16,15 +16,17 @@ public class Product {
 
     private String productId;
 
-    private String brief;
 
     private String name;
+
+    private String brief;
 
     private String picUrl;
 
     private Integer categoryId;
 
     // 产品配置列表，通过多对多关系映射
-    @TableField(exist=false)
-    private List<ProductConfig> configs;
+    //@TableField(exist=false)
+    //private List<ProductConfig> configs;
+
 }

@@ -20,6 +20,7 @@ CREATE TABLE `products` (
                             `id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
                             `product_id` varchar(100) NOT NULL,
                             `name` varchar(255) NOT NULL,
+                            `price` integer NOT NULL,
                             `brief` varchar(255),
                             `pic_url` varchar(255) NOT NULL DEFAULT '/media/logo.png',
                             `category_id` bigint NOT NULL

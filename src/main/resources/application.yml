@@ -3,11 +3,10 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/lenovoshop?useSSL=false&autoReconnect=true&characterEncoding=utf8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: Mo01iHt++
-
+    password: HNXhnx123
   mail:
     host: smtp.qq.com
-    username: 
+    username:
     password:
     protocol: smtp
     default-encoding: UTF-8
