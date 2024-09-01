@@ -12,7 +12,8 @@ CREATE TABLE `configs` (
                            `name` varchar(255) NOT NULL,
                            `brief` varchar(255),
                            `price` integer NOT NULL,
-                           `value` varchar(1024) NOT NULL
+                           `value` varchar(1024) NOT NULL,
+                           `product_code` varchar(100) NOT NULL
 );
 
 -- Create model Product
