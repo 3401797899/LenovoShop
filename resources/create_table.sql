@@ -1,7 +1,8 @@
 -- Create model Category
 CREATE TABLE `categories` (
                               `id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                              `name` varchar(255) NOT NULL
+                              `name` varchar(255) NOT NULL,
+                              `img_url` varchar(255) NOT NULL DEFAULT '/media/logo.png'
 );
 
 -- Create model Config
@@ -12,7 +13,8 @@ CREATE TABLE `configs` (
                            `name` varchar(255) NOT NULL,
                            `brief` varchar(255),
                            `price` integer NOT NULL,
-                           `value` varchar(1024) NOT NULL
+                           `value` varchar(1024) NOT NULL,
+                           `product_code` varchar(100) NOT NULL
 );
 
 -- Create model Product

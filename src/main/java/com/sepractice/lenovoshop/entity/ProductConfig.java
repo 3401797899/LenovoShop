@@ -20,4 +20,6 @@ public class ProductConfig {
     private String value;
 
     private Integer price;
+
+    private Long productCode;
 }

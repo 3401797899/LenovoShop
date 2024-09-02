@@ -25,6 +25,8 @@ public class Product {
 
     private Integer categoryId;
 
+    private Integer price;
+
     // 产品配置列表，通过多对多关系映射
     //@TableField(exist=false)
     //private List<ProductConfig> configs;
