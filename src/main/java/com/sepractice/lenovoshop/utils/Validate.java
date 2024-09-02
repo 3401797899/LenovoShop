@@ -11,7 +11,7 @@ public class Validate {
 
     public static String validate_email(String email){
         // 校验邮箱
-        if (!email.matches("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$")) {
+        if (!email.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$")) {
             return "邮箱格式不正确";
         }
         return "ok";
