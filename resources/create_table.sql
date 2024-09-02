@@ -8,6 +8,7 @@ CREATE TABLE `categories` (
 CREATE TABLE `configs` (
                            `id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY,
                            `product_id` bigint NOT NULL,
+                           `config_id` bigint NOT NULL,
                            `name` varchar(255) NOT NULL,
                            `brief` varchar(255),
                            `price` integer NOT NULL,
