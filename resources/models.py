@@ -66,6 +66,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name="产品名称")
     brief = models.CharField(max_length=255, verbose_name="产品简介")
     pic_url = models.CharField(verbose_name="产品图片", max_length=255,default='/media/logo.png')
+    price = models.IntegerField(verbose_name="价格")
     category = models.ForeignKey(to=Category, on_delete=models.DO_NOTHING, verbose_name="产品分类")
 
 
