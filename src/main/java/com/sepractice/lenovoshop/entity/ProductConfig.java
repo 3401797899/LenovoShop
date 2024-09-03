@@ -1,12 +1,18 @@
 package com.sepractice.lenovoshop.entity;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@TableName("configs")
+@TableName(value = "configs", autoResultMap = true)
 public class ProductConfig {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
@@ -17,9 +23,11 @@ public class ProductConfig {
 
     private String brief;
 
-    private String value;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Object> value;
 
     private Integer price;
 
     private Long productCode;
+
 }

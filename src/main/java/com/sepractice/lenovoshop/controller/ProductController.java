@@ -1,5 +1,6 @@
 package com.sepractice.lenovoshop.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sepractice.lenovoshop.entity.ProductConfig;
 import com.sepractice.lenovoshop.mapper.ProductConfigMapper;
 import com.sepractice.lenovoshop.mapper.ProductMapper;
@@ -32,12 +33,14 @@ public class ProductController {
     public Result infoPage(Long configCode) {
         Long productId = productService.getIdByCode(configCode);
         List<ProductConfig> configs = productService.getConfigsFromProduct(productId);
-        String unicodeConfig = productService.getConfigByCode(configCode);
-        String currentConfig = StringEscapeUtils.unescapeJava(unicodeConfig);
+        ProductConfig currentConfig = productService.getConfigByCode(configCode);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("currentConfig", currentConfig);
-        result.put("allConfigs", configs);
+        result.put("name", currentConfig.getName());
+        result.put("brief", currentConfig.getBrief());
+        result.put("price", currentConfig.getPrice());
+        result.put("currentConfig", currentConfig.getValue());
+        result.put("otherConfigs", configs);
 
         return Result.success(result);
     }

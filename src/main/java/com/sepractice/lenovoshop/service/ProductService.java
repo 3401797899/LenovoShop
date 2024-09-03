@@ -46,11 +46,10 @@ public class ProductService {
         return config.getProductId().longValue();
     }
 
-    public String getConfigByCode(Long productCode) {
+    public ProductConfig getConfigByCode(Long productCode) {
         QueryWrapper<ProductConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("product_code", productCode);
-        return configMapper.selectOne(queryWrapper).getValue();
+        return configMapper.selectOne(queryWrapper);
     }
 
-    public String get
 }
