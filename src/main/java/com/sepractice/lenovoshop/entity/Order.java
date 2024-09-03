@@ -16,8 +16,6 @@ public class Order {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String orderId;
-
     private Integer userId;
 
     private Integer payment;

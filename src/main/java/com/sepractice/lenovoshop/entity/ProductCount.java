@@ -9,9 +9,11 @@ import lombok.Data;
 @TableName("product_counts")
 public class ProductCount {
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    private Integer productId;
+    private Long orderId;
+
+    private Integer productCode;
 
     private Integer price;
 
