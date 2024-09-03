@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -22,7 +21,8 @@ public class OrderController {
     @PostMapping("/create")
     public Result createOrder(@RequestBody OrderCreationDTO orderCreationDTO) {
         Order newOrder = orderService.createOrder(orderCreationDTO);
-        return Result.success();
+
+        return Result.success(newOrder.getId());
     }
 
     @GetMapping("/list")
