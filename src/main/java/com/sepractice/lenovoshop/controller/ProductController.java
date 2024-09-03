@@ -33,11 +33,14 @@ public class ProductController {
     public Result infoPage(Long configCode) {
         Long productId = productService.getIdByCode(configCode);
         List<ProductConfig> configs = productService.getConfigsFromProduct(productId);
-        List<Object> currentConfig = productService.getConfigByCode(configCode);
+        ProductConfig currentConfig = productService.getConfigByCode(configCode);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("currentConfig", currentConfig);
-        result.put("allConfigs", configs);
+        result.put("name", currentConfig.getName());
+        result.put("brief", currentConfig.getBrief());
+        result.put("price", currentConfig.getPrice());
+        result.put("currentConfig", currentConfig.getValue());
+        result.put("otherConfigs", configs);
 
         return Result.success(result);
     }
