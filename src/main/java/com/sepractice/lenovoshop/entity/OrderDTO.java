@@ -12,6 +12,7 @@ import java.util.List;
 
 @Data
 public class OrderDTO {
+    //用来在返回订单列表时用
     private Long id;
 
     private String orderId;

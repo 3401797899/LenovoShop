@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sepractice.lenovoshop.service.OrderService;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderDTO;
+import com.sepractice.lenovoshop.entity.OrderCreationDTO;
 import com.sepractice.lenovoshop.utils.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -19,9 +19,10 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order newOrder = orderService.createOrder(order);
-        return ResponseEntity.ok(newOrder);
+    public Result createOrder(@RequestBody OrderCreationDTO orderCreationDTO) {
+        Order newOrder = orderService.createOrder(orderCreationDTO);
+
+        return Result.success(newOrder.getId());
     }
 
     @GetMapping("/list")
@@ -31,10 +32,6 @@ public class OrderController {
         }
 
         List<OrderDTO> orders = orderService.getOrdersByUserId(userId);
-
-
-
-
         return Result.success(orders);
     }
 

@@ -3,17 +3,50 @@ package com.sepractice.lenovoshop.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderDTO;
+import com.sepractice.lenovoshop.entity.OrderCreationDTO;
+import com.sepractice.lenovoshop.entity.ProductCount;
 import com.sepractice.lenovoshop.mapper.OrderMapper;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Date;
 
 @Service
 public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
-    public Order createOrder(Order order) {
+    @Autowired
+    private ProductCountService productCountService; // 注入 OrderItemService
+
+    public Order createOrder(OrderCreationDTO orderCreationDTO) {
+        Order order = new Order();
+        order.setUserId(orderCreationDTO.getUserId());
+        order.setDz(orderCreationDTO.getDz());
+        order.setName(orderCreationDTO.getName());
+        order.setPhone(orderCreationDTO.getPhone());
+        //order.setRemarks(orderCreationDTO.getRemarks());
+        order.setStatus(0);  // Default status for a new order
+        order.setCreatedTime(new Date());
+        order.setPayment(0);
+
+        // Save the order first to get the order ID
         this.save(order);
+
+        // Process each item in the order
+        for (ProductCount item : orderCreationDTO.getItems()) {
+            // Create an OrderItem entity (assuming you have one)
+            ProductCount orderItem = new ProductCount();
+            orderItem.setOrderId(order.getId());
+            orderItem.setProductCode(item.getProductCode());
+            orderItem.setCount(item.getCount());
+            orderItem.setPrice(item.getPrice());
+
+            // Save the order item (you would need an OrderItemService/Mapper for this)
+            productCountService.save(orderItem);
+        }
+
         return order;
     }
 
@@ -27,7 +60,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .map(order -> {
                     OrderDTO dto = new OrderDTO();
                     dto.setId(order.getId());
-                    dto.setOrderId(order.getOrderId());
                     dto.setUserId(order.getUserId());
                     dto.setPayment(order.getPayment());
                     dto.setStatus(order.getStatus());
@@ -37,9 +69,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                     dto.setDz(order.getDz());
 
                     //TODO：根据rainning的需求加
-
-
-
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -48,4 +77,8 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     public Order getOrderById(Long id) {
         return this.getById(id);
     }
+
+
+
+
 }
