@@ -33,4 +33,16 @@ public class ProductConfig {
 
     private Long productCode;
 
+    @TableField(exist = false)
+    private String picUrl;
+
+    // getter 和 setter 方法
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
 }

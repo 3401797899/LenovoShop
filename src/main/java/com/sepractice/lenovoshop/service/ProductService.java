@@ -29,9 +29,19 @@ public class ProductService {
     }
 
     public List<ProductConfig> getConfigsFromProduct(Long productId) {
+        // 获取 ProductConfig 列表
         QueryWrapper<ProductConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("product_id", productId);
-        return configMapper.selectList(queryWrapper);
+        List<ProductConfig> configList = configMapper.selectList(queryWrapper);
+
+        // 为每个 ProductConfig 查询对应的 Product，获取 picUrl 并设置
+        for (ProductConfig config : configList) {
+            Product product = productMapper.selectById(config.getProductId());
+            if (product != null) {
+                config.setPicUrl(product.getPicUrl());
+            }
+        }
+        return configList;
     }
 
     public Long getIdByCode(Long productCode) {
@@ -51,5 +61,11 @@ public class ProductService {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", key);  // Using "like" for fuzzy search
         return productMapper.selectList(queryWrapper);  // Directly return the result
+    }
+
+    public Product getProductById(Long productId) {
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", productId);
+        return productMapper.selectOne(queryWrapper);
     }
 }
