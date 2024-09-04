@@ -110,3 +110,13 @@ ALTER TABLE `orders_products`
 ALTER TABLE `addresses`
     ADD CONSTRAINT `addresses_user_id_fk_users_id`
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (3, 'Lenovo 电脑', 'https://p2.lefile.cn/fes/cms/2024/08/23/mxumf9f2zderqqvb8z7i4ih6880fx7823883.jpg;https://p3.lefile.cn/fes/cms/2024/08/02/q4urk875fj8hi93ciflfkzy8ac73g3711725.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (4, 'Lenovo 台式机', 'https://p3.lefile.cn/fes/cms/2024/08/17/fj0xcmnm3xb5gn5870odsho1c2apgo497402.jpg;https://p4.lefile.cn/fes/cms/2024/08/08/alwlzpyc9soqqdrm2vqjjrdfoca3wi671310.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (5, '手机&配件', 'https://p4.lefile.cn/fes/cms/2024/09/03/7ucuspywb0z8girquvy8ham5ui00sj666943.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (6, '平板电脑', 'https://p4.lefile.cn/fes/cms/2024/08/02/fxwtumpkt26c2gv68n8psdd4pnk0ok892835.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (7, '选件', 'https://p4.lefile.cn/fes/cms/2024/07/31/5j87ekmejdlaeullqhqnkvt9p7b5lr159729.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (8, '服务/配件', 'https://p1.lefile.cn/fes/cms/2024/08/29/mpj3ryyiaqad1nexbqb4p4rkg2uz8d028497.jpg;https://p3.lefile.cn/fes/cms/2024/09/02/tdizyain91hhvgqopw0wrxwv2zl230763149.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (9, '智能', 'https://p1.lefile.cn/fes/cms/2024/07/11/65j92u9o2id2rd4j8u45dfur339t8r441719.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (10, '显示器', 'https://p1.lefile.cn/fes/cms/2024/08/26/z3czih31yfo19oensm7x2qe2hodtno964393.jpg');
+INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES (11, 'IP周边', 'https://p2.lefile.cn/fes/cms/2024/08/05/grnmihkn6qfxcxd4phe43qwsg1o3u2157877.jpg');
