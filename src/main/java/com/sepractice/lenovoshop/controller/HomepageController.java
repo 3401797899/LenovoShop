@@ -40,7 +40,10 @@ public class HomepageController {
             Map<String, Object> category_info = new HashMap<>();
             category_info.put("id", category.getId());
             category_info.put("name", category.getName());
-            category_info.put("imgUrl", category.getImgUrl());
+            // 修改 imgUrl 格式，将其分割并存入 List
+            String imgUrl = category.getImgUrl();
+            List<String> imgUrlList = Arrays.asList(imgUrl.split(";")); // 分号分割后转为 List
+            category_info.put("imgUrl", imgUrlList);
             List<Product> products = productService.getProductsInCategory(categoryId);
             category_info.put("products", products);
             result.add(category_info);
