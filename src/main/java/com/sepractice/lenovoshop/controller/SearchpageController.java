@@ -38,23 +38,38 @@ public class SearchpageController {
                              Long limit,
                              Long currentPage,
                              @RequestParam(required = false) Integer categoryId,
-                             @RequestParam(defaultValue = "0") Integer sorter) {
+                             @RequestParam(defaultValue = "0") Integer sorter,
+                             @RequestParam(required = false, defaultValue = "0") Integer beginPrice,
+                             @RequestParam(required = false, defaultValue = "" + Integer.MAX_VALUE) Integer endPrice) {
         List<Product> result = productService.findConfigsByString(pattern);  // 调用实例方法
 
         if (categoryId != null) {
             result = result.stream()
-                    .filter(product -> categoryId.equals(product.getCategoryId()))  // 假设Product类有getCategoryId()方法
+                    .filter(product -> categoryId.equals(product.getCategoryId()))
                     .collect(Collectors.toList());
         }
 
+        // 筛选价格范围
+        if (beginPrice > 0) {
+            result = result.stream()
+                    .filter(product -> product.getPrice() >= beginPrice)
+                    .collect(Collectors.toList());
+        }
+        if (endPrice < Integer.MAX_VALUE) {
+            result = result.stream()
+                    .filter(product -> product.getPrice() <= endPrice)
+                    .collect(Collectors.toList());
+        }
+
+        // 按价格排序
         if(sorter == 1) {
             result = result.stream()
-                    .sorted(Comparator.comparing(Product::getPrice))  // 假设ProductConfig有getPrice()方法
+                    .sorted(Comparator.comparing(Product::getPrice))
                     .collect(Collectors.toList());
         }
         else if(sorter == 2) {
             result = result.stream()
-                    .sorted(Comparator.comparing(Product::getPrice).reversed())  // 假设ProductConfig有getPrice()方法
+                    .sorted(Comparator.comparing(Product::getPrice).reversed())
                     .collect(Collectors.toList());
         }
         // 计算分页信息
@@ -76,6 +91,8 @@ public class SearchpageController {
         finalResult.put("totalItems", totalItems);
         finalResult.put("pageSum", pageSum);
         finalResult.put("pageResult", pagedResult);
+        finalResult.put("beginPage", beginPrice);
+        finalResult.put("endPage", endPrice);
         
         // 返回分页结果
         return Result.success(finalResult);
