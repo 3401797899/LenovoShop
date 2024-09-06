@@ -20,6 +20,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     @Autowired
     private ProductCountService productCountService; // 注入 OrderItemService
 
+    @Autowired
+    private OrderMapper orderMapper;
+
     public Order createOrder(OrderCreationDTO orderCreationDTO) {
         Order order = new Order();
         order.setUserId(orderCreationDTO.getUserId());
@@ -74,8 +77,29 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .collect(Collectors.toList());
     }
 
-    public Order getOrderById(Long id) {
-        return this.getById(id);
+    public List<Order> getOrdersByConditions(Long userId, Long orderId, Long status) {
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+
+        if (userId != null) {
+            queryWrapper.eq("user_id", userId);
+        }
+        if (orderId != null) {
+            queryWrapper.eq("id", orderId);
+        }
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
+
+        // 执行查询并返回结果
+        return orderMapper.selectList(queryWrapper);
+    }
+
+
+    public Order getOrderById(Long id,Long userId) {
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        queryWrapper.eq("user_id", userId);
+        return orderMapper.selectOne(queryWrapper);
     }
 
 

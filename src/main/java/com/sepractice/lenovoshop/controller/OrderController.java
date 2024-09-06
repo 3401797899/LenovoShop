@@ -6,7 +6,6 @@ import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderDTO;
 import com.sepractice.lenovoshop.entity.OrderCreationDTO;
 import com.sepractice.lenovoshop.utils.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +35,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        Order order = orderService.getOrderById(id);
-        return ResponseEntity.ok(order);
+    public Result<Order> getOrderById(@PathVariable Long id,@RequestParam Long userId) {
+        Order order = orderService.getOrderById(id,userId);
+        return Result.success(order);
     }
 }
