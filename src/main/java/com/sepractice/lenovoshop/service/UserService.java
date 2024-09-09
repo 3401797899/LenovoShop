@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -66,5 +67,20 @@ public class UserService {
         user.setId(Integer.valueOf(userId));
         user.setAvatar(avatar);
         return userMapper.updateById(user) > 0;
+    }
+
+    public List<User> getUsersByCondition(String userId, String email) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (userId != null) {
+            queryWrapper.eq("id", userId);
+        }
+        if (email != null) {
+            queryWrapper.eq("email", email);
+        }
+        return userMapper.selectList(queryWrapper);
+    }
+
+    public boolean deleteUser(String userId) {
+        return userMapper.deleteById(userId) > 0;
     }
 }
