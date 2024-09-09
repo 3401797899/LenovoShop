@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderDTO;
 import com.sepractice.lenovoshop.entity.OrderCreationDTO;
+import com.sepractice.lenovoshop.entity.OrderUpdateDTO;
 import com.sepractice.lenovoshop.entity.ProductCount;
 import com.sepractice.lenovoshop.mapper.OrderMapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
@@ -102,6 +104,30 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         return orderMapper.selectOne(queryWrapper);
     }
 
+    public boolean updateOrder(OrderUpdateDTO orderUpdateDTO) {
+        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<>();
+        // 假设 orderUpdateDTO 中有一个 id 字段来标识要更新的订单
+        updateWrapper.eq("id", orderUpdateDTO.getId());
+
+        Order order = new Order();
+        if (orderUpdateDTO.getPayment() != null) {
+            order.setPayment(orderUpdateDTO.getPayment());
+        }
+        if (orderUpdateDTO.getStatus() != null) {
+            order.setStatus(orderUpdateDTO.getStatus());
+        }
+        if (orderUpdateDTO.getName() != null) {
+            order.setName(orderUpdateDTO.getName());
+        }
+        if (orderUpdateDTO.getDz() != null) {
+            order.setDz(orderUpdateDTO.getDz());
+        }
+        if (orderUpdateDTO.getPhone() != null) {
+            order.setPhone(orderUpdateDTO.getPhone());
+        }
+
+        return orderMapper.update(order, updateWrapper) > 0;
+    }
 
 
 
