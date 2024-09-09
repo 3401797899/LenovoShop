@@ -1,16 +1,21 @@
 package com.sepractice.lenovoshop.controller;
 
 
+import com.github.pagehelper.PageHelper;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderCreationDTO;
 import com.sepractice.lenovoshop.entity.OrderUpdateDTO;
 import com.sepractice.lenovoshop.entity.OrderDTO;
+import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.service.OrderService;
+import com.sepractice.lenovoshop.service.UserService;
 import com.sepractice.lenovoshop.utils.Result;
+import com.sepractice.lenovoshop.utils.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -18,6 +23,10 @@ public class AdminController
 {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private com.sepractice.lenovoshop.mapper.UserMapper userMapper;
 
     @PostMapping("/orders/create")
     public Result createOrder(@RequestBody OrderCreationDTO orderCreationDTO) {
@@ -39,26 +48,71 @@ public class AdminController
         return Result.success(orders);
     }
 
-    @GetMapping("/orders/delete")
-    public Result deleteOrder(@RequestParam(required = false) Long orderId) {
+    @GetMapping("/user/search")
+    public Result getAllUsers(
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String email
+    ) {
+        // 调用服务层方法，查询所有用户
+        List<User> users = userService.getUsersByCondition(userId, email);
+        return Result.success(users);
+    }
 
-
-        boolean success = orderService.removeById(orderId);
-        if (success) {
-            return Result.success(orderId);
+    @PostMapping("/user/create")
+    public Result createUsers(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        String password = params.get("password");
+        if(!Validate.validate_email(email).equals("ok")){
+            return Result.error(Validate.validate_pwd(email));
         }
-        else{
+        if(!Validate.validate_pwd(password).equals("ok")){
+            return Result.error(Validate.validate_pwd(password));
+        }
+        userService.register(email, password);
+        return Result.success();
+    }
+
+    @GetMapping("/user/delete")
+    public Result deleteUser(@RequestParam String userId) {
+        boolean success = userService.deleteUser(userId);
+        if (!success) {
             return Result.error("删除失败");
         }
+        return Result.success();
     }
 
-    @PostMapping("/orders/update")
-    public Result updateOrder(@RequestBody OrderUpdateDTO orderUpdateDTO) {
-        // 假设你有一个 Service 类来处理业务逻辑
-        boolean success = orderService.updateOrder(orderUpdateDTO);
-        if (success) {
+    @PostMapping("/user/update")
+    public Result updateUser(@RequestBody Map<String, String> params) {
+        try {
+            String userId = params.get("userId");
+            String nickname = params.get("nickname");
+            Integer gender = Integer.parseInt(params.get("gender"));
+            String email = params.get("email");
+            Integer balance = Integer.parseInt(params.get("balance"));
+
+            User user = userMapper.selectById(Integer.valueOf(userId));
+            user.setId(Integer.parseInt(userId));
+            if (nickname == null) {
+                return Result.error("昵称不能为空");
+            }
+            if (gender < 0 || gender > 2) {
+                return Result.error("性别参数错误");
+            }
+            if (!Validate.validate_email(email).equals("ok")) {
+                return Result.error(Validate.validate_email(email));
+            }
+            if (balance < 0) {
+                return Result.error("余额不能为负数");
+            }
+            user.setNickname(nickname);
+            user.setGender(gender);
+            user.setEmail(email);
+            user.setBalance(balance);
+
+            userMapper.updateById(user);
             return Result.success();
-        }else{return Result.error("更新失败");}
+        }catch (Exception e) {
+            return Result.error("更新失败");
+        }
     }
-
 }

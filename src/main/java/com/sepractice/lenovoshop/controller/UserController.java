@@ -206,6 +206,16 @@ public class UserController {
         return Result.success();
     }
 
+    @PostMapping(value = "/admin/login")
+    public Result admin_login(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        String password = params.get("password");
+        if(!(email.equals("admin") && password.equals("admin"))){
+            return Result.error("用户名或密码错误");
+        }
+        String token = JwtUtil.getToken("admin");
+        return Result.success(token);
+    }
 
 
 }

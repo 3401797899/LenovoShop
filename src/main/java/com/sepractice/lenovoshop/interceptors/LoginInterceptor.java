@@ -27,6 +27,25 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(request.getMethod().equals("OPTIONS")){
             return true;
         }
+        String path = request.getRequestURI();
+        if (path.startsWith("/admin")) {
+            try{
+                String token = request.getHeader("Authorization");
+                if (token == null) {
+                    Set401Response(response);
+                    return false;
+                }
+                String userId = JwtUtil.parseToken(token);
+                if(!userId.equals("admin")){
+                    Set401Response(response);
+                    return false;
+                }
+                return true;
+            } catch (Exception e) {
+                Set401Response(response);
+                return false;
+            }
+        }
         String token = request.getHeader("Authorization");
         if(token == null){
             Set401Response(response);
