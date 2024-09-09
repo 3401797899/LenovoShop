@@ -33,4 +33,16 @@ public class AddressController {
         return Result.success(addresses);
     }
 
+    @GetMapping("/delete")
+    public Result deleteAddresses(@RequestParam Long Id) {
+        boolean removed = addressService.removeById(Id);
+        if (removed) {
+            return Result.success(removed);
+        }
+        else{
+            return Result.error("删除失败");
+        }
+
+    }
+
 }
