@@ -1,7 +1,7 @@
 package com.sepractice.lenovoshop.controller;
 
 
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderCreationDTO;
 import com.sepractice.lenovoshop.entity.OrderUpdateDTO;
@@ -51,10 +51,12 @@ public class AdminController
     @GetMapping("/user/search")
     public Result getAllUsers(
             @RequestParam(required = false) String userId,
-            @RequestParam(required = false) String email
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer limit
     ) {
         // 调用服务层方法，查询所有用户
-        List<User> users = userService.getUsersByCondition(userId, email);
+        IPage<User> users = userService.getUsersByCondition(userId, email, page, limit);
         return Result.success(users);
     }
 

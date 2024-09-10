@@ -1,6 +1,9 @@
 package com.sepractice.lenovoshop.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import com.sepractice.lenovoshop.utils.RandomString;
@@ -69,7 +72,7 @@ public class UserService {
         return userMapper.updateById(user) > 0;
     }
 
-    public List<User> getUsersByCondition(String userId, String email) {
+    public IPage<User> getUsersByCondition(String userId, String email, Integer page, Integer limit) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (userId != null) {
             queryWrapper.eq("id", userId);
@@ -77,7 +80,10 @@ public class UserService {
         if (email != null) {
             queryWrapper.eq("email", email);
         }
-        return userMapper.selectList(queryWrapper);
+        Page<User> rowPage = new Page(page, limit);
+        LambdaQueryWrapper<User> lambdaQueryWrapper = queryWrapper.lambda();
+        rowPage = userMapper.selectPage(rowPage, lambdaQueryWrapper);
+        return rowPage;
     }
 
     public boolean deleteUser(String userId) {
