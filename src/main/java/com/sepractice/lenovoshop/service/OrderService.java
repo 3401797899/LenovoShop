@@ -135,9 +135,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
         Page<Order> t = orderMapper.selectPage(rowPage,queryWrapper);
         t.getRecords().forEach(order -> {
-            System.out.println(55);
+
                     List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
-                    order.setStatus(12);
+                    
                     order.setProducts(temp.stream()
                             .map(productCount -> {
                                         ProductList productList = new ProductList();
