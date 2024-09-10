@@ -13,7 +13,7 @@ public class ProductCount {
 
     private Long orderId;
 
-    private Integer productCode;
+    private String productCode;
 
     private Integer price;
 

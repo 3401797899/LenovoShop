@@ -1,15 +1,14 @@
 package com.sepractice.lenovoshop.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sepractice.lenovoshop.entity.Order;
-import com.sepractice.lenovoshop.entity.OrderDTO;
-import com.sepractice.lenovoshop.entity.OrderCreationDTO;
-import com.sepractice.lenovoshop.entity.OrderUpdateDTO;
-import com.sepractice.lenovoshop.entity.ProductCount;
+import com.sepractice.lenovoshop.entity.*;
 import com.sepractice.lenovoshop.mapper.OrderMapper;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.sepractice.lenovoshop.mapper.ProductConfigMapper;
+import com.sepractice.lenovoshop.mapper.ProductCountMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
@@ -24,6 +23,12 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private ProductConfigMapper productConfigMapper;
+
+    @Autowired
+    private ProductCountMapper productCountMapper;
 
     public Order createOrder(OrderCreationDTO orderCreationDTO) {
         Order order = new Order();
@@ -55,31 +60,62 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         return order;
     }
 
-    public List<OrderDTO> getOrdersByUserId(Long userId) {
+    public Page<OrderDTO> getOrdersByUserId(Long userId, Integer page, Integer limit) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
-        List<Order> orders = this.list(queryWrapper);
+        Page<Order> rowPage = new Page(page, limit);
+        Page<Order> orders = orderMapper.selectPage(rowPage,queryWrapper);
 
-        // 转换 Order 为 OrderDTO
-        return orders.stream()
-                .map(order -> {
-                    OrderDTO dto = new OrderDTO();
-                    dto.setId(order.getId());
-                    dto.setUserId(order.getUserId());
-                    dto.setPayment(order.getPayment());
-                    dto.setStatus(order.getStatus());
-                    dto.setCreatedTime(order.getCreatedTime());
-                    dto.setName(order.getName());
-                    dto.setPhone(order.getPhone());
-                    dto.setDz(order.getDz());
 
-                    //TODO：根据rainning的需求加
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        // 创建一个 Page 对象用于返回
+        Page<OrderDTO> resultPage = new Page<>();
+        resultPage.setCurrent(orders.getCurrent());
+        resultPage.setSize(orders.getSize());
+        resultPage.setTotal(orders.getTotal());
+        resultPage.setPages(orders.getPages());
+
+        // 将 Order 转换为 OrderDTO
+        resultPage.setRecords(
+                orders.getRecords().stream()
+                        .map(order -> {
+                            OrderDTO dto = new OrderDTO();
+                            dto.setId(order.getId());
+                            dto.setUserId(order.getUserId());
+                            dto.setPayment(order.getPayment());
+                            dto.setStatus(order.getStatus());
+                            dto.setCreatedTime(order.getCreatedTime());
+                            dto.setName(order.getName());
+                            dto.setPhone(order.getPhone());
+                            dto.setDz(order.getDz());
+
+                            List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
+
+
+
+                            dto.setItems(temp.stream()
+                                    .map(productCount -> {
+                                        ProductList productList = new ProductList();
+
+                                        ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+
+                                        productList.setName(pconfig.getName());
+                                        productList.setBrief(pconfig.getBrief());
+                                        productList.setCount(productCount.getCount());
+                                        productList.setPicUrl(pconfig.getPicUrl());
+                                          return productList;
+                                    }
+                                    )
+                                    .collect(Collectors.toList()));
+                            // TODO: 根据需求添加其他字段的转换
+                            return dto;
+                        })
+                        .collect(Collectors.toList())
+        );
+
+        return resultPage;
     }
 
-    public List<Order> getOrdersByConditions(Long userId, Long orderId, Long status) {
+    public IPage<Order> getOrdersByConditions(Long userId, Long orderId, Long status, Integer page, Integer limit) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
 
         if (userId != null) {
@@ -92,8 +128,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
             queryWrapper.eq("status", status);
         }
 
-        // 执行查询并返回结果
-        return orderMapper.selectList(queryWrapper);
+        Page<Order> rowPage = new Page(page, limit);
+
+        return orderMapper.selectPage(rowPage,queryWrapper);
     }
 
 

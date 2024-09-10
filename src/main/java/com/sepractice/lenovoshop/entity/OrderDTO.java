@@ -15,7 +15,7 @@ public class OrderDTO {
     //用来在返回订单列表时用
     private Long id;
 
-    private String orderId;
+    //private String orderId;
 
     private Integer userId;
 
@@ -40,6 +40,8 @@ public class OrderDTO {
     private String phone;
 
     private String dz;
+
+    private List<ProductList> items;
 
 }
 

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sepractice.lenovoshop.entity.Order;
 import com.sepractice.lenovoshop.entity.OrderCreationDTO;
 import com.sepractice.lenovoshop.entity.OrderUpdateDTO;
-import com.sepractice.lenovoshop.entity.OrderDTO;
 import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.service.OrderService;
 import com.sepractice.lenovoshop.service.UserService;
@@ -39,12 +38,13 @@ public class AdminController
     public Result getAllOrders(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long orderId,
-            @RequestParam(required = false) Long status) {
+            @RequestParam(required = false) Long status,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer limit) {
 
 
         // 调用服务层方法，根据条件查询订单
-        List<Order> orders = orderService.getOrdersByConditions(userId, orderId, status);
-
+        IPage<Order> orders = orderService.getOrdersByConditions(userId, orderId, status,page,limit);
         return Result.success(orders);
     }
 
