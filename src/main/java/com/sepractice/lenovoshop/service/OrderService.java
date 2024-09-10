@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sepractice.lenovoshop.mapper.ProductConfigMapper;
 import com.sepractice.lenovoshop.mapper.ProductCountMapper;
+import com.sepractice.lenovoshop.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
@@ -29,6 +30,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
     @Autowired
     private ProductCountMapper productCountMapper;
+
+    @Autowired
+    private ProductMapper productMapper;
 
     public Order createOrder(OrderCreationDTO orderCreationDTO) {
         Order order = new Order();
@@ -101,8 +105,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                                         productList.setName(pconfig.getName());
                                         productList.setBrief(pconfig.getBrief());
                                         productList.setCount(productCount.getCount());
-                                        productList.setPicUrl(pconfig.getPicUrl());
-                                          return productList;
+                                        productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+
+                                        return productList;
                                     }
                                     )
                                     .collect(Collectors.toList()));
