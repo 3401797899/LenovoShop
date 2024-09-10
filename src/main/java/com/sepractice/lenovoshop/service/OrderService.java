@@ -94,8 +94,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
                             List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
 
-
-
                             dto.setItems(temp.stream()
                                     .map(productCount -> {
                                         ProductList productList = new ProductList();
@@ -135,7 +133,30 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
         Page<Order> rowPage = new Page(page, limit);
 
-        return orderMapper.selectPage(rowPage,queryWrapper);
+        Page<Order> t = orderMapper.selectPage(rowPage,queryWrapper);
+        t.getRecords().forEach(order -> {
+            System.out.println(55);
+                    List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
+                    order.setStatus(12);
+                    order.setProducts(temp.stream()
+                            .map(productCount -> {
+                                        ProductList productList = new ProductList();
+
+                                        ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+
+                                        productList.setName(pconfig.getName());
+                                        productList.setBrief(pconfig.getBrief());
+                                        productList.setCount(productCount.getCount());
+                                        productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+
+                                        return productList;
+                                    }
+                            )
+                            .collect(Collectors.toList()));
+                });
+        return t;
+
+
     }
 
 
