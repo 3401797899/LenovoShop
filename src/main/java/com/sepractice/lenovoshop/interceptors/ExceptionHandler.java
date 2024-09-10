@@ -10,6 +10,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ResponseEntity<Result> exceptionHandler(Exception e){
+        e.printStackTrace();
         Result result = Result.error(e.toString());
         return ResponseEntity.status(500).body(result);
     }
