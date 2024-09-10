@@ -78,7 +78,7 @@ public class UserService {
             queryWrapper.eq("id", userId);
         }
         if (email != null) {
-            queryWrapper.eq("email", email);
+            queryWrapper.like(email != null, "email", email);
         }
         Page<User> rowPage = new Page(page, limit);
         LambdaQueryWrapper<User> lambdaQueryWrapper = queryWrapper.lambda();
