@@ -50,12 +50,12 @@ public class SearchpageController {
         }
 
         // 筛选价格范围
-        if (beginPrice > 0) {
+        if (beginPrice >= 0) {
             result = result.stream()
                     .filter(product -> product.getPrice() >= beginPrice)
                     .collect(Collectors.toList());
         }
-        if (endPrice < Integer.MAX_VALUE) {
+        if (endPrice <= Integer.MAX_VALUE) {
             result = result.stream()
                     .filter(product -> product.getPrice() <= endPrice)
                     .collect(Collectors.toList());
