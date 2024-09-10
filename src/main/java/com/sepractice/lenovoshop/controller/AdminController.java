@@ -116,7 +116,6 @@ public class AdminController
             Integer balance = Integer.parseInt(params.get("balance"));
 
             User user = userMapper.selectById(Integer.valueOf(userId));
-            user.setId(Integer.parseInt(userId));
             if (nickname == null) {
                 return Result.error("昵称不能为空");
             }
