@@ -99,9 +99,10 @@ public class AdminController
 
     @GetMapping("/user/delete")
     public Result deleteUser(@RequestParam String userId) {
-        boolean success = userService.deleteUser(userId);
-        if (!success) {
-            return Result.error("删除失败");
+        try {
+            userService.deleteUser(userId);
+        }catch (Exception e){
+            return Result.error("删除失败，该用户存在下单信息。");
         }
         return Result.success();
     }
