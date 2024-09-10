@@ -8,4 +8,7 @@ public interface ProductConfigMapper extends BaseMapper<ProductConfig> {
 
     @Select("SELECT * FROM configs WHERE product_code = #{productCode}")
     ProductConfig selectByProductCode(String productCode);
+
+    @Select("SELECT COUNT(*) FROM configs WHERE product_code = #{productCode}")
+    int countByProductId(String productId);
 }
