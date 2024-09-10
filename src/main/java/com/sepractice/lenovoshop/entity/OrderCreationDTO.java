@@ -13,6 +13,6 @@ public class OrderCreationDTO {
     private String phone;
     private List<ProductCount> items;
     private String remarks;
-
+    private Integer payment;
     // Getters and Setters
 }
