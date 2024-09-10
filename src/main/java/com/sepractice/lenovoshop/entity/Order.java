@@ -41,7 +41,7 @@ public class Order {
     private String dz;
 
     @TableField(exist = false)
-    private List<ProductCount> products;
+    private List<ProductList> products;
 
     // 枚举类型用于订单状态
     public enum Status {

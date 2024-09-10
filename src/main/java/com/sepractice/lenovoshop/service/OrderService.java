@@ -43,7 +43,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         //order.setRemarks(orderCreationDTO.getRemarks());
         order.setStatus(0);  // Default status for a new order
         order.setCreatedTime(new Date());
-        order.setPayment(0);
+        order.setPayment(orderCreationDTO.getPayment());
 
         // Save the order first to get the order ID
         this.save(order);

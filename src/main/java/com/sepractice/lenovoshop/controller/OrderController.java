@@ -1,6 +1,7 @@
 package com.sepractice.lenovoshop.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sepractice.lenovoshop.entity.User;
 import com.sepractice.lenovoshop.mapper.UserMapper;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotBlankValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,15 @@ public class OrderController {
 
     @PostMapping("/create")
     public Result createOrder(@RequestBody OrderCreationDTO orderCreationDTO) {
-
+        User user = userMapper.selectById(orderCreationDTO.getUserId());
         Integer payment =  orderCreationDTO.getPayment();
-        Integer balance = userMapper.selectById(orderCreationDTO.getUserId()).getBalance();
+        Integer balance = user.getBalance();
         if(payment > balance){
             return Result.error("余额不足");
         }
         Order newOrder = orderService.createOrder(orderCreationDTO);
-
-        userMapper.selectById(orderCreationDTO.getUserId()).setBalance(balance - payment);
-
-
+        user.setBalance(balance - payment);
+        userMapper.updateById(user);
         return Result.success(newOrder.getId());
     }
 
