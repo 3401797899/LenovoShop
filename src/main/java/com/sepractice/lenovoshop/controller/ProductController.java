@@ -31,7 +31,7 @@ public class ProductController {
 
     @GetMapping(value = "/")
     public Result infoPage(Long configCode) {
-        Long productId = productService.getIdByCode(configCode);
+        Long productId = productService.getIdByCodeInConfig(configCode);
         List<ProductConfig> configs = productService.getConfigsFromProduct(productId);
 
         return Result.success(configs);
