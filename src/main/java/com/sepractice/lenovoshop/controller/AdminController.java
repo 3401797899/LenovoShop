@@ -48,6 +48,29 @@ public class AdminController
         return Result.success(orders);
     }
 
+    @GetMapping("/orders/delete")
+    public Result deleteOrder(@RequestParam(required = false) Long orderId) {
+
+
+        boolean success = orderService.removeById(orderId);
+        if (success) {
+            return Result.success(orderId);
+        }
+        else{
+            return Result.error("删除失败");
+        }
+    }
+
+    @PostMapping("/orders/update")
+    public Result updateOrder(@RequestBody OrderUpdateDTO orderUpdateDTO) {
+        // 假设你有一个 Service 类来处理业务逻辑
+        boolean success = orderService.updateOrder(orderUpdateDTO);
+        if (success) {
+            return Result.success();
+        }else{return Result.error("更新失败");}
+    }
+
+
     @GetMapping("/user/search")
     public Result getAllUsers(
             @RequestParam(required = false) String userId,
