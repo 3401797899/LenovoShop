@@ -45,6 +45,9 @@ public class HomepageController {
             List<String> imgUrlList = Arrays.asList(imgUrl.split(";")); // 分号分割后转为 List
             category_info.put("imgUrl", imgUrlList);
             List<Product> products = productService.getProductsInCategory(categoryId);
+            if (products.size() > 8) {
+                products = products.subList(0, 8);
+            }
             category_info.put("products", products);
             result.add(category_info);
         }
