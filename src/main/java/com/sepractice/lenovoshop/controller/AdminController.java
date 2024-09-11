@@ -17,8 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController
-{
+public class AdminController {
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -50,7 +49,7 @@ public class AdminController
 
 
         // 调用服务层方法，根据条件查询订单
-        IPage<Order> orders = orderService.getOrdersByConditions(userId, orderId, status,page,limit);
+        IPage<Order> orders = orderService.getOrdersByConditions(userId, orderId, status, page, limit);
         return Result.success(orders);
     }
 
@@ -61,8 +60,7 @@ public class AdminController
         boolean success = orderService.removeById(orderId);
         if (success) {
             return Result.success(orderId);
-        }
-        else{
+        } else {
             return Result.error("删除失败");
         }
     }
@@ -73,7 +71,9 @@ public class AdminController
         boolean success = orderService.updateOrder(orderUpdateDTO);
         if (success) {
             return Result.success();
-        }else{return Result.error("更新失败");}
+        } else {
+            return Result.error("更新失败");
+        }
     }
 
 
@@ -93,10 +93,10 @@ public class AdminController
     public Result createUsers(@RequestBody Map<String, String> params) {
         String email = params.get("email");
         String password = params.get("password");
-        if(!Validate.validate_email(email).equals("ok")){
+        if (!Validate.validate_email(email).equals("ok")) {
             return Result.error(Validate.validate_pwd(email));
         }
-        if(!Validate.validate_pwd(password).equals("ok")){
+        if (!Validate.validate_pwd(password).equals("ok")) {
             return Result.error(Validate.validate_pwd(password));
         }
         userService.register(email, password);
@@ -107,7 +107,7 @@ public class AdminController
     public Result deleteUser(@RequestParam String userId) {
         try {
             userService.deleteUser(userId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return Result.error("删除失败，该用户存在下单信息。");
         }
         return Result.success();
@@ -142,7 +142,7 @@ public class AdminController
 
             userMapper.updateById(user);
             return Result.success();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Result.error("更新失败");
         }
     }
@@ -157,7 +157,7 @@ public class AdminController
     }
 
     @PostMapping("/product/create")
-    public Result createProducts(@RequestBody Map<String, String> params){
+    public Result createProducts(@RequestBody Map<String, String> params) {
         Product product = productService.createProduct(params);
 
         return Result.success(product);
@@ -170,8 +170,8 @@ public class AdminController
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "1") Integer limit
     ) {
-        if(page == null) page = 1;
-        if(limit == null) limit = 1;
+        if (page == null) page = 1;
+        if (limit == null) limit = 1;
         // 调用服务层方法，查询所有用户
         IPage<Product> products = productService.getProductsByCondition(id, productName, page, limit);
         return Result.success(products);
@@ -219,7 +219,7 @@ public class AdminController
 
             productMapper.updateById(product);
             return Result.success();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Result.error("更新失败");
         }
     }

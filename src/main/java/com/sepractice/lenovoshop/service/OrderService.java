@@ -12,6 +12,7 @@ import com.sepractice.lenovoshop.mapper.ProductCountMapper;
 import com.sepractice.lenovoshop.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         Page<Order> rowPage = new Page(page, limit);
-        Page<Order> orders = orderMapper.selectPage(rowPage,queryWrapper);
+        Page<Order> orders = orderMapper.selectPage(rowPage, queryWrapper);
 
 
         // 创建一个 Page 对象用于返回
@@ -92,21 +93,21 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                             dto.setPhone(order.getPhone());
                             dto.setDz(order.getDz());
 
-                            List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
+                            List<ProductCount> temp = productCountMapper.findByOrderId(order.getId());
 
                             dto.setItems(temp.stream()
                                     .map(productCount -> {
-                                        ProductList productList = new ProductList();
+                                                ProductList productList = new ProductList();
 
-                                        ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+                                                ProductConfig pconfig = productConfigMapper.selectByProductCode(productCount.getProductCode());
 
-                                        productList.setName(pconfig.getName());
-                                        productList.setBrief(pconfig.getBrief());
-                                        productList.setCount(productCount.getCount());
-                                        productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+                                                productList.setName(pconfig.getName());
+                                                productList.setBrief(pconfig.getBrief());
+                                                productList.setCount(productCount.getCount());
+                                                productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
 
-                                        return productList;
-                                    }
+                                                return productList;
+                                            }
                                     )
                                     .collect(Collectors.toList()));
                             // TODO: 根据需求添加其他字段的转换
@@ -133,34 +134,34 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
         Page<Order> rowPage = new Page(page, limit);
 
-        Page<Order> t = orderMapper.selectPage(rowPage,queryWrapper);
+        Page<Order> t = orderMapper.selectPage(rowPage, queryWrapper);
         t.getRecords().forEach(order -> {
 
-                    List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
+            List<ProductCount> temp = productCountMapper.findByOrderId(order.getId());
 
-                    order.setProducts(temp.stream()
-                            .map(productCount -> {
-                                        ProductList productList = new ProductList();
+            order.setProducts(temp.stream()
+                    .map(productCount -> {
+                                ProductList productList = new ProductList();
 
-                                        ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+                                ProductConfig pconfig = productConfigMapper.selectByProductCode(productCount.getProductCode());
 
-                                        productList.setName(pconfig.getName());
-                                        productList.setBrief(pconfig.getBrief());
-                                        productList.setCount(productCount.getCount());
-                                        productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+                                productList.setName(pconfig.getName());
+                                productList.setBrief(pconfig.getBrief());
+                                productList.setCount(productCount.getCount());
+                                productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
 
-                                        return productList;
-                                    }
-                            )
-                            .collect(Collectors.toList()));
-                });
+                                return productList;
+                            }
+                    )
+                    .collect(Collectors.toList()));
+        });
         return t;
 
 
     }
 
 
-    public Order getOrderById(Long id,Long userId) {
+    public Order getOrderById(Long id, Long userId) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         queryWrapper.eq("user_id", userId);
@@ -172,7 +173,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .map(productCount -> {
                             ProductList productList = new ProductList();
 
-                            ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+                            ProductConfig pconfig = productConfigMapper.selectByProductCode(productCount.getProductCode());
 
                             productList.setName(pconfig.getName());
                             productList.setBrief(pconfig.getBrief());
@@ -215,7 +216,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
         return orderMapper.update(order, updateWrapper) > 0;
     }
-
 
 
 }
