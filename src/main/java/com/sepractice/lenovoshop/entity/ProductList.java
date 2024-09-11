@@ -13,4 +13,8 @@ public class ProductList {
     private Integer count;
 
     private String picUrl;
+
+    private String productCode;
+
+    private Integer price;
 }

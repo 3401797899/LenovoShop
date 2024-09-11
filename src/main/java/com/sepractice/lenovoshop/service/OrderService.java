@@ -178,12 +178,15 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                             productList.setBrief(pconfig.getBrief());
                             productList.setCount(productCount.getCount());
                             productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+                            productList.setPrice(productCount.getPrice());
+                            productList.setProductCode(productCount.getProductCode());
+
 
                             return productList;
                         }
                 )
                 .collect(Collectors.toList()));
-        
+
 
         return tempOrder;
     }
