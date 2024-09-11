@@ -85,8 +85,11 @@ public class ProductService extends ServiceImpl<ProductMapper, Product>  {
         return productMapper.selectOne(queryWrapper);
     }
 
-    public IPage<Product> getProductsByCondition(String productName, Integer page, Integer limit) {
+    public IPage<Product> getProductsByCondition(Integer id, String productName, Integer page, Integer limit) {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        if (id != null) {
+            queryWrapper.eq("id", id);
+        }
         if (productName != null) {
             queryWrapper.like(productName != null, "name", productName);
         }

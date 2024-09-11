@@ -165,14 +165,15 @@ public class AdminController
 
     @GetMapping("/product/search")
     public Result getAllProducts(
+            @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String productName,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer limit
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "1") Integer limit
     ) {
         if(page == null) page = 1;
         if(limit == null) limit = 1;
         // 调用服务层方法，查询所有用户
-        IPage<Product> products = productService.getProductsByCondition(productName, page, limit);
+        IPage<Product> products = productService.getProductsByCondition(id, productName, page, limit);
         return Result.success(products);
     }
 
