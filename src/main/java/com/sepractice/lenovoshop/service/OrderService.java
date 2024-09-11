@@ -137,7 +137,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         t.getRecords().forEach(order -> {
 
                     List<ProductCount> temp =   productCountMapper.findByOrderId(order.getId());
-                    
+
                     order.setProducts(temp.stream()
                             .map(productCount -> {
                                         ProductList productList = new ProductList();
@@ -164,7 +164,28 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         queryWrapper.eq("user_id", userId);
-        return orderMapper.selectOne(queryWrapper);
+
+        Order tempOrder = orderMapper.selectOne(queryWrapper);
+        List<ProductCount> temp = productCountMapper.findByOrderId(tempOrder.getId());
+
+        tempOrder.setProducts(temp.stream()
+                .map(productCount -> {
+                            ProductList productList = new ProductList();
+
+                            ProductConfig pconfig =  productConfigMapper.selectByProductCode(productCount.getProductCode());
+
+                            productList.setName(pconfig.getName());
+                            productList.setBrief(pconfig.getBrief());
+                            productList.setCount(productCount.getCount());
+                            productList.setPicUrl(productMapper.selectById(pconfig.getProductId()).getPicUrl());
+
+                            return productList;
+                        }
+                )
+                .collect(Collectors.toList()));
+        
+
+        return tempOrder;
     }
 
     public boolean updateOrder(OrderUpdateDTO orderUpdateDTO) {
