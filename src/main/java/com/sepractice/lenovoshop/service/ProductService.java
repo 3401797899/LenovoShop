@@ -88,7 +88,7 @@ public class ProductService extends ServiceImpl<ProductMapper, Product>  {
     public IPage<Product> getProductsByCondition(String productName, Integer page, Integer limit) {
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
         if (productName != null) {
-            queryWrapper.like(productName != null, "productName", productName);
+            queryWrapper.like(productName != null, "name", productName);
         }
         Page<Product> rowPage = new Page(page, limit);
         LambdaQueryWrapper<Product> lambdaQueryWrapper = queryWrapper.lambda();
