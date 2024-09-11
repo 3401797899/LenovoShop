@@ -112,11 +112,7 @@ public class ProductService extends ServiceImpl<ProductMapper, Product>  {
     }
 
     @Transactional
-    public boolean deleteProduct(String productId) {
-        Integer id = this.getIdByCodeInProduct(productId);
-        if (configMapper.countByProductId(productId) > 0) {
-            return false;
-        }
+    public boolean deleteProduct(Integer id) {
         return productMapper.deleteById(id) > 0;
     }
 

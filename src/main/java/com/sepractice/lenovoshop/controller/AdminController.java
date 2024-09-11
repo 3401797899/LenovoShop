@@ -148,8 +148,8 @@ public class AdminController
     }
 
     @GetMapping("/product/delete")
-    public Result deleteProduct(@RequestParam String productId) {
-        boolean success = productService.deleteProduct(productId);
+    public Result deleteProduct(@RequestParam Integer id) {
+        boolean success = productService.deleteProduct(id);
         if (!success) {
             return Result.error("删除失败");
         }
